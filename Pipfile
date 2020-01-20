@@ -14,6 +14,7 @@ rope = "*"
 [packages]
 mysql-connector-python = "*"
 requests = "*"
+apscheduler = "*"
 
 [requires]
 python_version = "3.8"
