@@ -2,6 +2,9 @@ name: CI
 
 on: [push]
 
+env:
+  TEST: docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/${{ github.event.repository.name }}
+
 jobs:
 
   build:
@@ -11,9 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker.pkg.github.com/$GITHUB_REPOSITORY/${{ github.event.repository.name }}:develop
+      run: docker build . --file Dockerfile --tag docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/${{ github.event.repository.name }}:develop
     - name: Run tests
-      run: docker run --env-file .env.test docker.pkg.github.com/$GITHUB_REPOSITORY/${{ github.event.repository.name }}:develop python -m pytest
+      run: docker run --env-file .env.test docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/${{ github.event.repository.name }}:develop python -m pytest
     - name: Publish to registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
