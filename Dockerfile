@@ -1,4 +1,4 @@
-FROM python:3.8.1
+FROM python:3.8.1-alpine
 
 ENV PYTHONUNBUFFERED 1
 
@@ -7,8 +7,7 @@ RUN pip install pipenv
 
 WORKDIR /code
 
-COPY Pipfile /code/
-COPY Pipfile.lock /code/
+COPY Pipfile Pipfile.lock /code/
 
 # Install both default and dev packages so that we can run the tests against this image
 RUN pipenv install --dev --ignore-pipfile --system --deploy
