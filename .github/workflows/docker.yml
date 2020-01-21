@@ -16,15 +16,15 @@ jobs:
     - run: env
     - uses: actions/checkout@v1
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker.pkg.github.com/$IMAGE_NAME:${GITHUB_REF##*/}
+      run: docker build . --file Dockerfile --tag docker.pkg.github.com/${IMAGE_NAME}:${GITHUB_REF##*/}
     # - name: Run mypy against the image
-    #   run: docker run docker.pkg.github.com/$IMAGE_NAME:${GITHUB_REF##*/} mypy
+    #   run: docker run docker.pkg.github.com/${IMAGE_NAME}:${GITHUB_REF##*/} mypy
     - name: Run tests against the image
-      run: docker run --env-file tests/.test.env docker.pkg.github.com/$IMAGE_NAME:${GITHUB_REF##*/} python -m pytest
+      run: docker run --env-file tests/.test.env docker.pkg.github.com/${IMAGE_NAME}:${GITHUB_REF##*/} python -m pytest
     - name: Publish image to GitHub packages
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: $IMAGE_NAME:${GITHUB_REF##*/}
+        name: ${IMAGE_NAME}:${GITHUB_REF##*/}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
