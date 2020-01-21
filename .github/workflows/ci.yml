@@ -1,26 +1,38 @@
 name: CI
 
-on: [push]
-
-env:
-  TEST: docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/${{ github.event.repository.name }}
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
 
 jobs:
-
-  build:
-
+  test:
     runs-on: ubuntu-18.04
-
+    container:
+      image: python:3.8.1
+      env:
+        MLWH_DB_USER: test
+        MLWH_DB_PASSWORD: test
+        MLWH_DB_HOST: test
+        MLWH_DB_PORT: test
+        MLWH_DB_DBNAME: test
+        SS_DB_USER: test
+        SS_DB_PASSWORD: test
+        SS_DB_HOST: test
+        SS_DB_PORT: test
+        SS_DB_DBNAME: test
+        SS_URL_HOST: test
     steps:
+    - run: env
     - uses: actions/checkout@v1
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/${{ github.event.repository.name }}:develop
+    - name: Upgrade pip
+      run: pip install pip"<20.0"
+    - name: Install pipenv
+      run: pip install pipenv
+    - name: Install dependencies
+      run: pipenv install --dev --ignore-pipfile --system --deploy
+    # - name: Perform type checking using mypy
+    #   run: mypy main.py
     - name: Run tests
-      run: docker run --env-file .env.test docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/${{ github.event.repository.name }}:develop python -m pytest
-    - name: Publish to registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: $GITHUB_REPOSITORY/${{ github.event.repository.name }}:develop
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
+      run: python -m pytest

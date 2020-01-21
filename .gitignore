@@ -7,3 +7,6 @@
 # coverage
 .coverage
 htmlcov
+
+# cache
+.mypy_cache

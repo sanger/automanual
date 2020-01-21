@@ -10,6 +10,7 @@ pytest = "*"
 coverage = "*"
 pytest-cov = "*"
 rope = "*"
+mypy = "*"
 
 [packages]
 mysql-connector-python = "*"

@@ -13,4 +13,5 @@ WHERE
         AND requests.state = 'started'
         AND requests.request_type_id = 168
         AND events.message LIKE '%qc complete%'
-ORDER BY batch_requests.batch_id , batch_requests.position ASC;
+ORDER BY batch_requests.batch_id , batch_requests.position ASC
+limit 1;
