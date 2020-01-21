@@ -1,3 +1,4 @@
+import http
 import logging
 import os
 import traceback
@@ -6,6 +7,7 @@ from collections import namedtuple
 
 import mysql.connector
 import requests
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 FORMAT = '%(asctime)-15s %(name)s:%(lineno)s %(levelname)s:%(message)s'
 logging.basicConfig(format=FORMAT)
@@ -119,8 +121,12 @@ def send_npg_action(config, asset_id, status):
     xml_document = build_xml_document(asset_id, status)
     logger.debug(f'Sending {status} for asset {asset_id}')
 
-    response = requests.post(url_for_action(asset_id, status), xml_document)
-    logger.debug(response.status_code)
+    headers = {'Content-Type': 'application/xml'}
+    url = url_for_action(config, asset_id, status)
+    response = requests.post(url, data=xml_document, headers=headers)
+
+    if response.status_code != http.HTTPStatus.OK:
+        raise Exception(f'Error while processing {url}')
 
 
 def get_lanes_info(config):
@@ -170,14 +176,23 @@ def find_and_complete(config, lanes_info):
     connection.close()
 
 
-def main():
+def magic(config):
     try:
-        config = get_config()
         lanes_info = get_lanes_info(config)
         find_and_complete(config, lanes_info)
     except (Exception, mysql.connector.Error) as error:
         logging.error(traceback.print_exc())
         logging.error(error)
+
+
+def main():
+    scheduler = BlockingScheduler()
+    try:
+        config = get_config()
+        scheduler.add_job(magic, 'interval', (config, ), seconds=60)
+        scheduler.start()
+    except (KeyboardInterrupt, SystemExit):
+        pass
 
 
 if __name__ == '__main__':

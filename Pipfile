@@ -10,10 +10,12 @@ pytest = "*"
 coverage = "*"
 pytest-cov = "*"
 rope = "*"
+mypy = "*"
 
 [packages]
 mysql-connector-python = "*"
 requests = "*"
+apscheduler = "*"
 
 [requires]
 python_version = "3.8"

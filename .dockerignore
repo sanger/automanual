@@ -1,0 +1,5 @@
+# Files to ignore when building the Docker image
+.coverage
+.env
+.gitignore
+README.md

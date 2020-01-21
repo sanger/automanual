@@ -1,9 +1,15 @@
-from collections import namedtuple
-from main import qc_status, past_tense, get_config, build_xml_document, url_for_action
+import pytest
+
+from main import (build_xml_document, get_config, past_tense, qc_status,
+                  url_for_action)
 
 
-def test_get_config():
-    config = get_config()
+@pytest.fixture
+def config():
+    return get_config()
+
+
+def test_get_config(config):
     assert set(config._fields) == set(('ss', 'mlwh'))
     assert set(config.ss._fields) == set(('db_host', 'db_port', 'db_user', 'db_password', 'db_dbname', 'url_host'))
     assert set(config.mlwh._fields) == set(('db_host', 'db_port', 'db_user', 'db_password', 'db_dbname'))
@@ -29,8 +35,7 @@ def test_build_xml_document():
     assert f'Asset {asset_id} {past_tense(status)} manual qc' in xml_document
 
 
-def test_url_for_action():
-    config = get_config()
+def test_url_for_action(config):
     asset_id = '123'
     status = 'pass'
     url = url_for_action(config, asset_id, status)

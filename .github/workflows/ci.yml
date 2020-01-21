@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    container:
+      image: python:3.8.1
+      env:
+        MLWH_DB_USER: test
+        MLWH_DB_PASSWORD: test
+        MLWH_DB_HOST: test
+        MLWH_DB_PORT: test
+        MLWH_DB_DBNAME: test
+        SS_DB_USER: test
+        SS_DB_PASSWORD: test
+        SS_DB_HOST: test
+        SS_DB_PORT: test
+        SS_DB_DBNAME: test
+        SS_URL_HOST: test
+    steps:
+    - run: env
+    - uses: actions/checkout@v1
+    - name: Upgrade pip
+      run: pip install --upgrade pip
+    - name: Install pipenv
+      run: pip install pipenv
+    - name: Install dependencies
+      run: pipenv install --dev --ignore-pipfile --system --deploy
+    # - name: Perform type checking using mypy
+    #   run: mypy main.py
+    - name: Run tests
+      run: python -m pytest
