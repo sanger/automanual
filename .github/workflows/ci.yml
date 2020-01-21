@@ -27,7 +27,7 @@ jobs:
     - run: env
     - uses: actions/checkout@v1
     - name: Upgrade pip
-      run: pip install pip"<20.0"
+      run: pip install --upgrade pip
     - name: Install pipenv
       run: pip install pipenv
     - name: Install dependencies

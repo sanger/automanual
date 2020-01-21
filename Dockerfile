@@ -2,7 +2,7 @@ FROM python:3.8.1
 
 ENV PYTHONUNBUFFERED 1
 
-RUN pip install pip"<20.0"
+RUN pip install --upgrade pip
 RUN pip install pipenv
 
 WORKDIR /code
