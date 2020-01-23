@@ -60,7 +60,7 @@ def connect_to_db(config, db):
     Connects to the given database using the MySQL connector.
     """
     db_config = getattr(config, db)
-    logger.debug(db_config)
+
     connection = mysql.connector.connect(
         user=db_config.db_user,
         password=db_config.db_password,
@@ -110,7 +110,7 @@ def url_for_action(config, asset_id, status):
     """
     url = f'http://{config.ss.url_host}/npg_actions/assets/{asset_id}/{status}_qc_state'
 
-    logger.debug(url)
+    logger.debug(f'URL: {url}')
 
     return url
 
@@ -119,7 +119,7 @@ def send_npg_action(config, asset_id, status):
     """Send an HTTP POST request to the SS endpoint provided for NPG
     """
     xml_document = build_xml_document(asset_id, status)
-    logger.debug(f'Sending {status} for asset {asset_id}')
+    logger.info(f'Sending {status} for asset {asset_id}')
 
     headers = {'Content-Type': 'application/xml'}
     url = url_for_action(config, asset_id, status)
@@ -145,7 +145,8 @@ def get_lanes_info(config):
             'batch_id': batch_id
         }
         lanes_info.append(record)
-        logger.debug(record)
+
+    logger.info(f'Lanes to process: {len(lanes_info)}')
 
     cursor.close()
     connection.close()
@@ -162,6 +163,9 @@ def find_and_complete(config, lanes_info):
         mlwh_query_template = f.read()
 
     for lane in lanes_info:
+        logger.info(f'{"-" * 80}')
+        logger.info(f'lane info: {lane}')
+
         mlwh_query = mlwh_query_template
         for r in (('__BATCH_ID__', str(lane['batch_id'])), ('__POSITION__', str(lane['position']))):
             mlwh_query = mlwh_query.replace(*r)
@@ -180,6 +184,7 @@ def magic(config):
     try:
         lanes_info = get_lanes_info(config)
         find_and_complete(config, lanes_info)
+        logger.info('DONE')
     except (Exception, mysql.connector.Error) as error:
         logging.error(traceback.print_exc())
         logging.error(error)
@@ -189,7 +194,7 @@ def main():
     scheduler = BlockingScheduler()
     try:
         config = get_config()
-        scheduler.add_job(magic, 'interval', (config, ), seconds=60)
+        scheduler.add_job(magic, 'interval', (config, ), hours=12)
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
         pass
