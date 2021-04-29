@@ -1,0 +1,32 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "07:00"
+    timezone: Europe/London
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: flake8
+    versions:
+    - 3.8.4
+    - 3.9.0
+  - dependency-name: coverage
+    versions:
+    - "5.4"
+  - dependency-name: pytest
+    versions:
+    - 6.2.2
+  - dependency-name: mypy
+    versions:
+    - "0.800"
+  - dependency-name: mysql-connector-python
+    versions:
+    - 8.0.23
+  - dependency-name: rope
+    versions:
+    - 0.18.0
+  - dependency-name: yapf
+    versions:
+    - 0.30.0
