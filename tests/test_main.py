@@ -1,11 +1,10 @@
 import pytest
-
 from main import build_xml_document, get_config, past_tense, qc_status, url_for_action
 
 
 @pytest.fixture
 def config():
-    return get_config()
+    return get_config(testing=True)
 
 
 def test_get_config(config):

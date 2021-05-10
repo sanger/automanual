@@ -7,6 +7,7 @@ from collections import namedtuple
 import mysql.connector
 import requests
 from apscheduler.schedulers.blocking import BlockingScheduler
+from dotenv import load_dotenv
 
 FORMAT = "%(asctime)-15s %(name)s:%(lineno)s %(levelname)s:%(message)s"
 
@@ -18,10 +19,13 @@ SS = "ss"
 MLWH = "mlwh"
 
 
-def get_config():
+def get_config(testing: bool = False):
     """
     Get the required config parameters
     """
+    if testing:
+        load_dotenv()
+
     required_config = (
         "MLWH_DB_HOST",
         "MLWH_DB_PORT",
