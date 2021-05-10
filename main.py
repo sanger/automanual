@@ -45,11 +45,11 @@ def get_config():
 
     Config = namedtuple("Config", [SS, MLWH])  # type: ignore
 
-    SsConfig = namedtuple("SsConfig", [conf[conf.find("_") + 1:].lower() for conf in ss_config_keys])  # type: ignore
-    MlwhConfig = namedtuple("MlwhConfig", [conf[conf.find("_") + 1:].lower() for conf in mlwh_config_keys])  # type: ignore # noqa: E501
+    SsConfig = namedtuple("SsConfig", [conf[conf.find("_") + 1 :].lower() for conf in ss_config_keys])  # type: ignore # noqa: E501, E203
+    MlwhConfig = namedtuple("MlwhConfig", [conf[conf.find("_") + 1 :].lower() for conf in mlwh_config_keys])  # type: ignore # noqa: E501, E203
 
-    ss_dict = {item[item.find("_") + 1:].lower(): os.getenv(item) for item in ss_config_keys}
-    mlwh_dict = {item[item.find("_") + 1:].lower(): os.getenv(item) for item in mlwh_config_keys}
+    ss_dict = {item[item.find("_") + 1 :].lower(): os.getenv(item) for item in ss_config_keys}  # noqa: E203
+    mlwh_dict = {item[item.find("_") + 1 :].lower(): os.getenv(item) for item in mlwh_config_keys}  # noqa: E203
 
     ss_config = SsConfig(**ss_dict)  # type: ignore
     mlwh_config = MlwhConfig(**mlwh_dict)  # type: ignore

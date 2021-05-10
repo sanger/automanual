@@ -25,7 +25,7 @@ jobs:
         run: >-
           docker run
           --network host
-          --env SETTINGS_PATH=config/test.py
+          --env-file tests/.test.env
           --entrypoint=""
           docker.pkg.github.com/${IMAGE_NAME}:${GITHUB_REF##*/}
           python -m pytest --no-cov -vx
