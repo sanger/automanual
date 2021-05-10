@@ -8,4 +8,5 @@
 .mypy_cache
 .pytest_cache
 .release-version
+mypy.ini
 README.md
