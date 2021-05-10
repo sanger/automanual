@@ -107,6 +107,6 @@ jobs:
           cp .env.example .env
       - name: Test with pytest
         run: |
-          pipenv run test
+          python -m pytest -x
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
