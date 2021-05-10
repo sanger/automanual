@@ -1,38 +1,109 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - develop
+      - master
   pull_request:
     branches:
       - develop
       - master
 
 jobs:
-  test:
-    runs-on: ubuntu-18.04
-    container:
-      image: python:3.8.1
-      env:
-        MLWH_DB_USER: test
-        MLWH_DB_PASSWORD: test
-        MLWH_DB_HOST: test
-        MLWH_DB_PORT: test
-        MLWH_DB_DBNAME: test
-        SS_DB_USER: test
-        SS_DB_PASSWORD: test
-        SS_DB_HOST: test
-        SS_DB_PORT: test
-        SS_DB_DBNAME: test
-        SS_URL_HOST: test
+  black:
+    runs-on: ubuntu-latest
     steps:
-    - run: env
-    - uses: actions/checkout@v1
-    - name: Upgrade pip
-      run: pip install --upgrade pip
-    - name: Install pipenv
-      run: pip install pipenv
-    - name: Install dependencies
-      run: pipenv install --dev --ignore-pipfile --system --deploy
-    # - name: Perform type checking using mypy
-    #   run: mypy main.py
-    - name: Run tests
-      run: python -m pytest
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install pipenv
+        run: |
+          pip install pipenv
+      - name: Install dependencies
+        run: |
+          pipenv sync --dev --system
+      - name: Check format with black
+        run: |
+          # stop the build if there are black formatting errors
+          python -m black --check .
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install pipenv
+        run: |
+          pip install pipenv
+      - name: Install dependencies
+        run: |
+          pipenv sync --dev --system
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install pipenv
+        run: |
+          pip install pipenv
+      - name: Install dependencies
+        run: |
+          pipenv sync --dev --system
+      - name: Run mypy
+        run: |
+          python -m mypy .
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install pipenv
+        run: |
+          pip install pipenv
+      - name: Install dependencies
+        run: |
+          pipenv sync --dev --system
+      - name: Test with pytest
+        run: |
+          python -m pytest -x
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
