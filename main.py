@@ -19,7 +19,7 @@ SS = "ss"
 MLWH = "mlwh"
 
 
-def get_config(testing: bool = False):
+def get_config(testing: bool = False):  # type: ignore
     """
     Get the required config parameters
     """
