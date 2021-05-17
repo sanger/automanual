@@ -1,5 +1,12 @@
 # Files to ignore when building the Docker image
 .coverage
 .env
+.env.example
+.git
+.github
 .gitignore
+.mypy_cache
+.pytest_cache
+.release-version
+mypy.ini
 README.md

@@ -4,18 +4,28 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-yapf = "*"
-flake8 = "*"
-pytest = "*"
+black = "*"
 coverage = "*"
-pytest-cov = "*"
-rope = "*"
+flake8 = "*"
+flake8-bugbear = "*"
 mypy = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [packages]
-mysql-connector-python = "*"
-requests = "*"
-apscheduler = "*"
+apscheduler = "~=3.6"
+mysql-connector-python = "~=8.0"
+python-dotenv = "~=0.17"
+requests = "~=2.23"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
+
+[scripts]
+black = 'black'
+flake8 = 'flake8'
+mypy = 'mypy'
+test = 'python -m pytest -v'
