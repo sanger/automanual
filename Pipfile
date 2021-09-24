@@ -13,7 +13,7 @@ pytest = "*"
 pytest-cov = "*"
 
 [packages]
-apscheduler = "~=3.6"
+apscheduler = "~=3.8"
 mysql-connector-python = "~=8.0"
 python-dotenv = "~=0.17"
 requests = "~=2.23"
