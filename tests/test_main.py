@@ -37,4 +37,4 @@ def test_url_for_action(config):
     asset_id = "123"
     status = "pass"
     url = url_for_action(config, asset_id, status)
-    assert url == f"http://{config.ss.url_host}/npg_actions/assets/{asset_id}/{status}_qc_state"
+    assert url == f"{config.ss.url_host}/npg_actions/assets/{asset_id}/{status}_qc_state"
