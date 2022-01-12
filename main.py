@@ -111,7 +111,7 @@ def build_xml_document(asset_id, status):
 
 def url_for_action(config, asset_id, status):
     """Get the URL required for the status update"""
-    url = f"http://{config.ss.url_host}/npg_actions/assets/{asset_id}/{status}_qc_state"
+    url = f"{config.ss.url_host}/npg_actions/assets/{asset_id}/{status}_qc_state"
 
     logger.debug(f"URL: {url}")
 
