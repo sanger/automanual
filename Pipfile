@@ -15,7 +15,7 @@ pytest-cov = "*"
 [packages]
 apscheduler = "~=3.6"
 mysql-connector-python = "~=8.0"
-python-dotenv = "~=0.17"
+python-dotenv = "~=0.21"
 requests = "~=2.23"
 
 [requires]
