@@ -5,7 +5,6 @@ on:
   pull_request:
     branches:
       - master
-      - develop
 
 jobs:
   check:
@@ -13,27 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set excluded release types
-        run: >-
-          if [ "${{ github.base_ref }}" = "master" ]; then
-            echo "exclude_types=draft|prerelease" >> $GITHUB_ENV
-          elif [ "${{ github.base_ref }}" = "develop" ]; then
-            echo "exclude_types=draft" >> $GITHUB_ENV
-          else
-            exit 1;
-          fi
-
-      - name: Get the latest release
-        id: last_release
-        uses: InsonusK/get-latest-release@v1.0.1
+      - name: Get specific changed files
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v23
         with:
-          myToken: ${{ github.token }}
-          exclude_types: ${{ env.exclude_types }}
-          view_top: 1
+          files: |
+            .release-version
 
-      - name: Compare releases
+      - name: Run step looking for change in the release version
         run: >-
-          if [ "${{ steps.last_release.outputs.tag_name }}" = "$(printf 'v%s-develop\n' $(cat .release-version))" ] ||
-          [ "${{ steps.last_release.outputs.tag_name }}" = "$(printf 'v%s\n' $(cat .release-version))" ]; then
+          if ! "${{ steps.changed-files-specific.outputs.any_changed }}"; then
+            echo "Please change the release version number"
             exit 1;
           fi
