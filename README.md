@@ -1,5 +1,7 @@
 # AutoManual
 
+This repo is archived as it is not used anymore.
+
 This script will automatically perform a manual QC on the required runs.
 
 ## Requirements
